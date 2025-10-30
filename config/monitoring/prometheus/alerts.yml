@@ -1,0 +1,128 @@
+# Prometheus Alert Rules for SelamAI Trading Platform
+
+groups:
+  - name: selamai_trading_alerts
+    interval: 30s
+    rules:
+      # High error rate
+      - alert: HighErrorRate
+        expr: rate(api_errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }} errors/sec (threshold: 0.1)"
+
+      # Critical error rate
+      - alert: CriticalErrorRate
+        expr: rate(api_errors_total[5m]) > 0.5
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical error rate"
+          description: "Error rate is {{ $value }} errors/sec (threshold: 0.5)"
+
+      # High API latency
+      - alert: HighAPILatency
+        expr: histogram_quantile(0.95, rate(api_request_duration_seconds_bucket[5m])) > 5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API latency"
+          description: "95th percentile latency is {{ $value }}s (threshold: 5s)"
+
+      # Trade failure rate
+      - alert: HighTradeFailureRate
+        expr: rate(trades_failed[5m]) / rate(trades_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High trade failure rate"
+          description: "Trade failure rate is {{ $value | humanizePercentage }}"
+
+      # Circuit breaker triggered
+      - alert: CircuitBreakerTriggered
+        expr: increase(circuit_breakers_triggered[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Circuit breaker triggered"
+          description: "Circuit breaker has been triggered {{ $value }} times"
+
+      # High drawdown
+      - alert: HighDrawdown
+        expr: drawdown_percent > 20
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High portfolio drawdown"
+          description: "Drawdown is {{ $value }}% (threshold: 20%)"
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: memory_usage_percent > 90
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value }}%"
+
+      # High CPU usage
+      - alert: HighCPUUsage
+        expr: cpu_usage_percent > 90
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage"
+          description: "CPU usage is {{ $value }}%"
+
+      # Service down
+      - alert: ServiceDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Service is down"
+          description: "{{ $labels.job }} service has been down for more than 2 minutes"
+
+      # No recent trades
+      - alert: NoRecentTrades
+        expr: rate(trades_total[30m]) == 0
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "No trades executed recently"
+          description: "No trades have been executed in the last 30 minutes"
+
+  - name: selamai_agent_alerts
+    interval: 30s
+    rules:
+      # High agent error rate
+      - alert: HighAgentErrorRate
+        expr: rate(agent_errors_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High AI agent error rate"
+          description: "Agent error rate is {{ $value }} errors/sec"
+
+      # Slow agent responses
+      - alert: SlowAgentResponse
+        expr: histogram_quantile(0.95, rate(agent_requests_duration_seconds_bucket[5m])) > 10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Slow agent response times"
+          description: "95th percentile agent response time is {{ $value }}s"

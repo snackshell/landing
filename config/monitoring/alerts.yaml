@@ -1,0 +1,152 @@
+# Alert Configuration for SelamAI Trading Platform
+
+alerts:
+  # Enable alerting
+  enabled: true
+  
+  # Alert channels
+  channels:
+    email:
+      enabled: false
+      smtp_host: ${SMTP_HOST:smtp.gmail.com}
+      smtp_port: ${SMTP_PORT:587}
+      smtp_user: ${SMTP_USER:}
+      smtp_password: ${SMTP_PASSWORD:}
+      from_address: ${ALERT_FROM_EMAIL:alerts@selamai.com}
+      to_addresses:
+        - ${ALERT_TO_EMAIL:admin@selamai.com}
+      subject_prefix: "[SelamAI Alert]"
+      
+    slack:
+      enabled: false
+      webhook_url: ${SLACK_WEBHOOK_URL:}
+      channel: ${SLACK_CHANNEL:#alerts}
+      username: SelamAI Alert Bot
+      icon_emoji: ":warning:"
+      
+    webhook:
+      enabled: false
+      url: ${ALERT_WEBHOOK_URL:}
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: ${ALERT_WEBHOOK_AUTH:}
+        
+    console:
+      enabled: true
+      colorize: true
+      
+  # Alert rules
+  rules:
+    # Trading alerts
+    circuit_breaker_triggered:
+      severity: critical
+      message: "Circuit breaker triggered for {symbol}"
+      channels: [email, slack, console]
+      cooldown_minutes: 5
+      
+    trade_failed:
+      severity: error
+      message: "Trade execution failed: {error_message}"
+      channels: [console, slack]
+      cooldown_minutes: 1
+      
+    high_trade_failure_rate:
+      severity: critical
+      message: "Trade failure rate exceeded threshold: {failure_rate}%"
+      channels: [email, slack, console]
+      threshold: 10  # percent
+      window_minutes: 10
+      cooldown_minutes: 15
+      
+    # Risk alerts
+    drawdown_exceeded:
+      severity: critical
+      message: "Drawdown exceeded threshold: {drawdown}%"
+      channels: [email, slack, console]
+      threshold: 20  # percent
+      cooldown_minutes: 10
+      
+    margin_call:
+      severity: critical
+      message: "Margin usage critical: {margin_usage}%"
+      channels: [email, slack, console]
+      threshold: 90  # percent
+      cooldown_minutes: 5
+      
+    position_limit_exceeded:
+      severity: warning
+      message: "Position size limit approached: {position_size}"
+      channels: [console, slack]
+      cooldown_minutes: 10
+      
+    # System alerts
+    high_api_latency:
+      severity: warning
+      message: "API latency high: {latency_ms}ms"
+      channels: [console]
+      threshold: 5000  # ms
+      window_minutes: 5
+      cooldown_minutes: 10
+      
+    high_error_rate:
+      severity: error
+      message: "Error rate elevated: {error_rate}%"
+      channels: [email, slack, console]
+      threshold: 10  # percent
+      window_minutes: 5
+      cooldown_minutes: 15
+      
+    database_connection_failed:
+      severity: critical
+      message: "Database connection failed: {error}"
+      channels: [email, slack, console]
+      cooldown_minutes: 5
+      
+    websocket_connection_failed:
+      severity: warning
+      message: "WebSocket connection failed for {connection_id}"
+      channels: [console]
+      cooldown_minutes: 1
+      
+    # Agent alerts
+    agent_error:
+      severity: error
+      message: "AI agent error: {agent_id} - {error_message}"
+      channels: [console, slack]
+      cooldown_minutes: 5
+      
+    agent_timeout:
+      severity: warning
+      message: "Agent request timeout: {agent_id}"
+      channels: [console]
+      cooldown_minutes: 5
+      
+    # Resource alerts
+    high_memory_usage:
+      severity: warning
+      message: "Memory usage critical: {memory_usage}%"
+      channels: [email, console]
+      threshold: 90  # percent
+      cooldown_minutes: 10
+      
+    high_cpu_usage:
+      severity: warning
+      message: "CPU usage high: {cpu_usage}%"
+      channels: [console]
+      threshold: 90  # percent
+      cooldown_minutes: 10
+      
+  # Alert settings
+  settings:
+    # Aggregate similar alerts
+    aggregation_enabled: true
+    aggregation_window_seconds: 60
+    
+    # Rate limiting
+    rate_limit_enabled: true
+    max_alerts_per_hour: 100
+    
+    # Alert history
+    history_enabled: true
+    history_retention_days: 30

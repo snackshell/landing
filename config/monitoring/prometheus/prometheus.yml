@@ -1,0 +1,50 @@
+# Prometheus Configuration for SelamAI Trading Platform
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'selamai-trading'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "alerts.yml"
+
+# Scrape configurations
+scrape_configs:
+  # SelamAI Backend API
+  - job_name: 'selamai-backend'
+    static_configs:
+      - targets: ['localhost:8000']
+    metrics_path: '/api/metrics/prometheus'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # SelamAI Metrics Service
+  - job_name: 'selamai-metrics'
+    static_configs:
+      - targets: ['localhost:9090']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # Node Exporter (system metrics)
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100']
+
+  # PostgreSQL Exporter (if using PostgreSQL)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['localhost:9187']
+
+# Remote write configuration (optional - for long-term storage)
+# remote_write:
+#   - url: "http://prometheus-remote-storage:9201/write"

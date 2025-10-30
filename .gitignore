@@ -87,6 +87,7 @@ htmlcov/
 
 # Logs
 *.log
+logs/
 
 # Sensitive configs (if any)
 config/secrets.yaml
