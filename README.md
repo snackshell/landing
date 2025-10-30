@@ -20,6 +20,14 @@ A modern AI-powered trading platform with comprehensive configuration management
 - **Hot-Reloading**: Configuration changes without service restart
 - **API Endpoints**: RESTful API for configuration inspection and management
 
+### Logging & Monitoring
+- **Structured Logging**: JSON-formatted logs with correlation IDs for request tracing
+- **Performance Metrics**: Real-time tracking of trading, agent, and system metrics
+- **Alerting System**: Multi-channel alerts (email, Slack, webhooks) for critical events
+- **Dashboard Integration**: WebSocket streams for real-time frontend visualization
+- **External Exporters**: Prometheus and OpenTelemetry support for production monitoring
+- **Comprehensive Observability**: Track trades, decisions, performance, and errors for compliance
+
 ## Tech Stack
 
 ### Frontend
@@ -36,6 +44,8 @@ A modern AI-powered trading platform with comprehensive configuration management
 - **API Framework**: FastAPI
 - **Configuration**: YAML with environment overrides
 - **Testing**: pytest
+- **Monitoring**: Structured logging, metrics tracking, alerting
+- **Observability**: Prometheus, OpenTelemetry, Grafana support
 
 ## Sections
 
@@ -146,8 +156,21 @@ uvicorn backend.api:app --host 0.0.0.0 --port 8000
 │   │   ├── loader.py       # Config loader with Pydantic validation
 │   │   ├── models.py       # Pydantic models for validation
 │   │   └── cli.py          # CLI tool for config management
+│   ├── logging_monitoring/ # Logging and monitoring system
+│   │   ├── logger.py       # Structured logging with JSON format
+│   │   ├── correlation.py  # Correlation ID management
+│   │   ├── metrics.py      # Performance metrics tracker
+│   │   ├── alerting.py     # Alert manager for critical events
+│   │   ├── middleware.py   # FastAPI middleware for logging/metrics
+│   │   ├── config.py       # Monitoring configuration loader
+│   │   └── exporters/      # External system exporters
+│   │       ├── prometheus.py
+│   │       └── opentelemetry.py
 │   ├── tests/              # Test suite
-│   │   └── test_config_loader.py
+│   │   ├── test_config_loader.py
+│   │   ├── test_logging.py
+│   │   ├── test_metrics.py
+│   │   └── test_alerting.py
 │   ├── api.py              # FastAPI application
 │   └── requirements.txt    # Python dependencies
 ├── config/                 # YAML configuration files
@@ -162,6 +185,12 @@ uvicorn backend.api:app --host 0.0.0.0 --port 8000
 │   ├── risk/               # Risk management profiles
 │   │   ├── default.yaml
 │   │   └── aggressive.yaml
+│   ├── monitoring/         # Monitoring configuration
+│   │   ├── logging.yaml    # Logging configuration
+│   │   ├── metrics.yaml    # Metrics configuration
+│   │   ├── alerts.yaml     # Alert rules and channels
+│   │   ├── prometheus/     # Prometheus configs
+│   │   └── grafana/        # Grafana dashboards
 │   └── environments/       # Environment-specific overrides
 │       ├── development.yaml
 │       ├── staging.yaml
@@ -179,9 +208,13 @@ uvicorn backend.api:app --host 0.0.0.0 --port 8000
 │   │   └── footer.tsx
 │   └── ui/                 # shadcn/ui components
 ├── docs/                   # Documentation
-│   └── CONFIGURATION.md    # Configuration guide
+│   ├── CONFIGURATION.md    # Configuration guide
+│   └── MONITORING.md       # Logging and monitoring guide
 ├── lib/
 │   └── utils.ts            # Utility functions
+├── logs/                   # Log files (auto-created)
+│   ├── selamai.log         # Main log file (JSON format)
+│   └── errors.log          # Error log file
 ├── .env.example            # Environment variables template
 └── .gitignore              # Git ignore rules
 ```
@@ -216,6 +249,49 @@ SelamAI uses a comprehensive YAML-based configuration system with typed validati
 
 See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for detailed documentation.
 
+## Logging and Monitoring
+
+SelamAI includes a comprehensive logging, metrics, and alerting system:
+
+- **Structured Logging**: JSON-formatted logs with correlation IDs for tracing
+- **Performance Metrics**: Track trading, agent, and system performance
+- **Alerting**: Multi-channel alerts for critical events (email, Slack, webhooks)
+- **Dashboards**: Pre-configured Grafana dashboards for visualization
+- **Exporters**: Prometheus and OpenTelemetry support
+
+### Quick Start
+
+```bash
+# Logs are automatically enabled and written to logs/ directory
+python backend/api.py
+
+# View metrics
+curl http://localhost:8000/api/metrics/dashboard
+
+# Test an alert
+curl -X POST http://localhost:8000/api/alerts/test/trade_failed
+```
+
+### API Endpoints
+
+- `GET /api/metrics` - Get all metrics
+- `GET /api/metrics/dashboard` - Get dashboard-formatted metrics
+- `GET /api/metrics/{metric_name}` - Get specific metric summary
+- `GET /api/metrics/prometheus` - Get metrics in Prometheus format
+- `GET /api/alerts/stats` - Get alert statistics
+- `POST /api/alerts/test/{rule_name}` - Test an alert rule
+
+### Configuration
+
+Monitoring configuration is in `config/monitoring/`:
+- `logging.yaml` - Logging configuration
+- `metrics.yaml` - Metrics collection settings
+- `alerts.yaml` - Alert rules and channels
+- `prometheus/` - Prometheus configuration
+- `grafana/` - Grafana dashboard templates
+
+See [docs/MONITORING.md](docs/MONITORING.md) for detailed documentation.
+
 ## Testing
 
 ### Backend Tests
@@ -243,6 +319,10 @@ The test suite covers:
 - Configuration precedence rules
 - Error handling and validation errors
 - Deep merge functionality
+- Logging and correlation IDs
+- Metrics tracking and aggregation
+- Alert triggering and cooldowns
+- Middleware integration
 
 ## API Documentation
 

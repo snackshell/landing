@@ -1,0 +1,80 @@
+# Logging Configuration for SelamAI Trading Platform
+
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: INFO
+  
+  # Format: json or text
+  format: json
+  
+  # Enable correlation IDs for tracing requests/trades
+  enable_correlation_ids: true
+  
+  # Sinks configuration
+  sinks:
+    console:
+      enabled: true
+      level: INFO
+      colorize: true
+      
+    file:
+      enabled: true
+      level: DEBUG
+      path: logs/selamai.log
+      rotation:
+        max_size: 10485760  # 10MB
+        backup_count: 10
+      
+    error_file:
+      enabled: true
+      level: ERROR
+      path: logs/errors.log
+      rotation:
+        max_size: 10485760  # 10MB
+        backup_count: 5
+  
+  # Standard fields to include in every log entry
+  standard_fields:
+    - timestamp
+    - level
+    - logger
+    - message
+    - correlation_id
+    - service
+    - environment
+    
+  # Additional context fields for trading operations
+  trading_fields:
+    - agent_id
+    - strategy
+    - symbol
+    - order_id
+    - trade_id
+    - risk_profile
+    
+  # Log retention policy
+  retention:
+    days: 30
+    compress: true
+    
+  # Performance logging
+  performance:
+    enabled: true
+    log_slow_requests: true
+    slow_threshold_ms: 1000
+    log_database_queries: true
+    log_api_calls: true
+    
+# External exporters (optional)
+exporters:
+  opentelemetry:
+    enabled: false
+    endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4317}
+    service_name: selamai-trading
+    headers:
+      authorization: ${OTEL_AUTH_HEADER:}
+      
+  prometheus:
+    enabled: false
+    port: 9090
+    path: /metrics

@@ -1,0 +1,118 @@
+# Metrics Configuration for SelamAI Trading Platform
+
+metrics:
+  # Enable metrics collection
+  enabled: true
+  
+  # Metrics collection interval (seconds)
+  collection_interval: 60
+  
+  # Metrics storage
+  storage:
+    type: memory  # memory, database, or both
+    retention_hours: 168  # 7 days
+    
+  # Agent metrics
+  agent_metrics:
+    enabled: true
+    metrics:
+      - agent_requests_total
+      - agent_requests_duration_seconds
+      - agent_decisions_total
+      - agent_errors_total
+      - agent_active_sessions
+      
+  # Strategy metrics
+  strategy_metrics:
+    enabled: true
+    metrics:
+      - strategy_signals_total
+      - strategy_accuracy_percent
+      - strategy_profit_loss
+      - strategy_trades_executed
+      - strategy_execution_time_seconds
+      
+  # Trading metrics
+  trading_metrics:
+    enabled: true
+    metrics:
+      - trades_total
+      - trades_successful
+      - trades_failed
+      - order_execution_time_seconds
+      - position_size
+      - profit_loss_total
+      - win_rate_percent
+      
+  # Risk metrics
+  risk_metrics:
+    enabled: true
+    metrics:
+      - risk_exposure_percent
+      - drawdown_percent
+      - portfolio_value
+      - margin_usage_percent
+      - circuit_breakers_triggered
+      
+  # System metrics
+  system_metrics:
+    enabled: true
+    metrics:
+      - api_requests_total
+      - api_request_duration_seconds
+      - api_errors_total
+      - websocket_connections
+      - database_queries_total
+      - database_query_duration_seconds
+      - cache_hits_total
+      - cache_misses_total
+      - memory_usage_bytes
+      - cpu_usage_percent
+      
+  # Custom business metrics
+  custom_metrics:
+    enabled: true
+    # Add custom metrics as needed
+    
+# Metrics publishing
+publishing:
+  # Publish to database
+  database:
+    enabled: true
+    table: metrics
+    batch_size: 100
+    flush_interval: 30
+    
+  # Publish to WebSocket for real-time dashboard
+  websocket:
+    enabled: true
+    channel: metrics
+    throttle_ms: 1000  # Max 1 update per second per metric
+    
+  # Publish to Prometheus
+  prometheus:
+    enabled: false
+    port: 9090
+    path: /metrics
+    
+# Alerting thresholds for metrics
+thresholds:
+  error_rate:
+    warning: 0.05  # 5%
+    critical: 0.10  # 10%
+    
+  api_latency_ms:
+    warning: 1000
+    critical: 5000
+    
+  memory_usage_percent:
+    warning: 80
+    critical: 95
+    
+  cpu_usage_percent:
+    warning: 80
+    critical: 95
+    
+  trade_failure_rate:
+    warning: 0.05
+    critical: 0.10
