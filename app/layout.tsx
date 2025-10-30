@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SelamAI - Your Gateway to the Power of OpenAI",
-  description: "Access GPT-4, Claude, Gemini, and more through a unified, premium AI dashboard. Monitor usage, track costs, and switch models instantly.",
+  title: "Developer Product - Build Better Software",
+  description: "A developer-focused product with modern tools and workflows.",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
