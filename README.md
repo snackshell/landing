@@ -1,23 +1,41 @@
-# SelamAI - Dashboard Landing Page
+# SelamAI - AI-Powered Trading Platform
 
-A modern, minimal, and professional Dashboard Landing Page for SelamAI - an AI platform wrapper with OpenAI-inspired aesthetics.
+A modern AI-powered trading platform with comprehensive configuration management, autonomous trading agents, and a professional dashboard landing page.
 
 ## Features
 
+### Frontend
 - **Modern Design**: Clean, professional aesthetic inspired by OpenAI, ChatGPT, Notion, and Linear
 - **Fully Responsive**: Mobile-first design that works beautifully across all screen sizes
 - **Interactive Components**: Smooth animations powered by Framer Motion
 - **shadcn/ui**: Built with high-quality, accessible UI components
 - **TypeScript**: Type-safe development with Next.js 16 and React
 
+### Backend & AI Core
+- **Configuration Management**: YAML-based configuration with typed validation using Pydantic
+- **AI Trading Agents**: Autonomous trading agents with customizable behavior
+- **Risk Management**: Comprehensive risk management profiles (conservative, aggressive)
+- **Trading Strategies**: Multiple strategy configurations (momentum, mean reversion)
+- **Multi-Asset Support**: Forex, commodities, cryptocurrencies, and indices
+- **Hot-Reloading**: Configuration changes without service restart
+- **API Endpoints**: RESTful API for configuration inspection and management
+
 ## Tech Stack
 
+### Frontend
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4
 - **UI Components**: shadcn/ui
 - **Animations**: Framer Motion
 - **Icons**: Lucide React
+
+### Backend
+- **Language**: Python 3.10+
+- **Validation**: Pydantic 2.0+
+- **API Framework**: FastAPI
+- **Configuration**: YAML with environment overrides
+- **Testing**: pytest
 
 ## Sections
 
@@ -33,7 +51,9 @@ A modern, minimal, and professional Dashboard Landing Page for SelamAI - an AI p
 
 ## Getting Started
 
-Install dependencies:
+### Frontend Setup
+
+Install frontend dependencies:
 
 ```bash
 npm install
@@ -47,20 +67,105 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the landing page.
 
+### Backend Setup
+
+Install Python dependencies:
+
+```bash
+pip install -r backend/requirements.txt
+```
+
+Set up environment variables:
+
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+Start the configuration API:
+
+```bash
+python backend/api.py
+```
+
+Or with uvicorn:
+
+```bash
+uvicorn backend.api:app --reload --port 8000
+```
+
+The API will be available at [http://localhost:8000](http://localhost:8000)
+
+### Configuration Management
+
+See comprehensive documentation: [docs/CONFIGURATION.md](docs/CONFIGURATION.md)
+
+Quick commands:
+
+```bash
+# Validate all configurations
+python -m backend.config.cli validate
+
+# Show specific configuration
+python -m backend.config.cli show main
+python -m backend.config.cli show strategy momentum
+
+# List available configurations
+python -m backend.config.cli list strategies
+python -m backend.config.cli list agents
+```
+
 ## Build for Production
+
+### Frontend
 
 ```bash
 npm run build
 npm start
 ```
 
+### Backend
+
+```bash
+# Set environment
+export ENVIRONMENT=production
+
+# Start with production settings
+uvicorn backend.api:app --host 0.0.0.0 --port 8000
+```
+
 ## Project Structure
 
 ```
-├── app/
+├── app/                    # Next.js frontend
 │   ├── layout.tsx          # Root layout with metadata
 │   ├── page.tsx            # Main landing page
 │   └── globals.css         # Global styles and theme
+├── backend/                # Python backend
+│   ├── config/             # Configuration management
+│   │   ├── loader.py       # Config loader with Pydantic validation
+│   │   ├── models.py       # Pydantic models for validation
+│   │   └── cli.py          # CLI tool for config management
+│   ├── tests/              # Test suite
+│   │   └── test_config_loader.py
+│   ├── api.py              # FastAPI application
+│   └── requirements.txt    # Python dependencies
+├── config/                 # YAML configuration files
+│   ├── main.yaml           # Main system configuration
+│   ├── assets.yaml         # Trading assets definitions
+│   ├── agents/             # AI agent configurations
+│   │   ├── trading_agent.yaml
+│   │   └── analysis_agent.yaml
+│   ├── strategies/         # Trading strategy configurations
+│   │   ├── momentum.yaml
+│   │   └── mean_reversion.yaml
+│   ├── risk/               # Risk management profiles
+│   │   ├── default.yaml
+│   │   └── aggressive.yaml
+│   └── environments/       # Environment-specific overrides
+│       ├── development.yaml
+│       ├── staging.yaml
+│       └── production.yaml
 ├── components/
 │   ├── landing/            # Landing page sections
 │   │   ├── header.tsx
@@ -73,8 +178,12 @@ npm start
 │   │   ├── early-access.tsx
 │   │   └── footer.tsx
 │   └── ui/                 # shadcn/ui components
-└── lib/
-    └── utils.ts            # Utility functions
+├── docs/                   # Documentation
+│   └── CONFIGURATION.md    # Configuration guide
+├── lib/
+│   └── utils.ts            # Utility functions
+├── .env.example            # Environment variables template
+└── .gitignore              # Git ignore rules
 ```
 
 ## Design System
@@ -93,6 +202,73 @@ npm start
 - Keyboard navigation support
 - Focus indicators
 - Screen reader friendly
+
+## Configuration
+
+SelamAI uses a comprehensive YAML-based configuration system with typed validation. Key features:
+
+- **Environment-Specific Overrides**: Separate configs for development, staging, and production
+- **Typed Validation**: Pydantic models ensure configuration correctness
+- **Hot-Reloading**: Update configs without restarting (in development)
+- **CLI Tools**: Inspect and validate configurations from command line
+- **API Endpoints**: RESTful API for configuration management
+- **Security**: Environment variable substitution for sensitive values
+
+See [docs/CONFIGURATION.md](docs/CONFIGURATION.md) for detailed documentation.
+
+## Testing
+
+### Backend Tests
+
+```bash
+# Install test dependencies
+pip install -r backend/requirements.txt
+
+# Run all tests
+pytest backend/tests/
+
+# Run with coverage
+pytest backend/tests/ --cov=backend --cov-report=html
+
+# Run specific test file
+pytest backend/tests/test_config_loader.py -v
+```
+
+### Test Coverage
+
+The test suite covers:
+- Configuration loading and parsing
+- Pydantic model validation
+- Environment-specific overrides
+- Configuration precedence rules
+- Error handling and validation errors
+- Deep merge functionality
+
+## API Documentation
+
+Once the backend server is running, access the interactive API documentation:
+
+- Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)
+- ReDoc: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+
+## Security Best Practices
+
+1. **Never commit secrets**: Use `.env` file for sensitive values
+2. **Use .env.example**: Provide template with placeholder values
+3. **Environment variables**: Reference sensitive values using `${VAR_NAME}` syntax
+4. **Rotate credentials**: Regular rotation of API keys and passwords
+5. **HTTPS in production**: Always use HTTPS for production deployments
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests (`pytest backend/tests/`)
+5. Validate configurations (`python -m backend.config.cli validate`)
+6. Commit your changes (`git commit -m 'Add amazing feature'`)
+7. Push to the branch (`git push origin feature/amazing-feature`)
+8. Open a Pull Request
 
 ## License
 

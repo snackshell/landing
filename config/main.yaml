@@ -1,0 +1,129 @@
+# Main SelamAI Configuration
+# This is the primary configuration file that ties together all system components
+
+system:
+  name: "SelamAI"
+  version: "1.0.0"
+  environment: "development"  # development, staging, production
+  debug: true
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+
+# API Configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:8000"
+  rate_limit:
+    enabled: true
+    requests_per_minute: 60
+    requests_per_hour: 1000
+
+# AI Model Configuration
+ai:
+  provider: "openai"  # openai, anthropic, custom
+  model: "gpt-4"
+  temperature: 0.7
+  max_tokens: 2000
+  timeout: 30
+  retry_attempts: 3
+  endpoints:
+    openai: "https://api.openai.com/v1"
+    anthropic: "https://api.anthropic.com/v1"
+  features:
+    sentiment_analysis: true
+    signal_generation: true
+    risk_assessment: true
+    market_commentary: true
+
+# Database Configuration
+database:
+  type: "postgresql"
+  host: "localhost"
+  port: 5432
+  name: "selamai_db"
+  pool_size: 10
+  pool_timeout: 30
+  echo: false
+
+# Cache Configuration
+cache:
+  enabled: true
+  type: "redis"
+  host: "localhost"
+  port: 6379
+  ttl: 3600  # Time to live in seconds
+  max_size: 1000
+
+# Broker Configuration
+broker:
+  default_provider: "mt5"  # mt5, interactive_brokers, alpaca
+  mt5:
+    enabled: true
+    server: ""  # Set via environment variable
+    account: ""  # Set via environment variable
+    password: ""  # Set via environment variable
+    timeout: 30
+  interactive_brokers:
+    enabled: false
+    host: "127.0.0.1"
+    port: 7497
+    client_id: 1
+  alpaca:
+    enabled: false
+    base_url: "https://paper-api.alpaca.markets"
+    api_version: "v2"
+
+# Real-time Data Feed Configuration
+data_feed:
+  primary_provider: "polygon"  # polygon, alpha_vantage, yahoo
+  update_interval: 60  # seconds
+  historical_data_days: 365
+  providers:
+    polygon:
+      enabled: true
+      websocket: true
+    alpha_vantage:
+      enabled: false
+      rate_limit: 5  # requests per minute
+    yahoo:
+      enabled: true
+      fallback: true
+
+# Monitoring and Alerts
+monitoring:
+  enabled: true
+  metrics_interval: 60  # seconds
+  alert_channels:
+    - email
+    - slack
+  health_check_interval: 30
+  performance_tracking: true
+
+# Security Configuration
+security:
+  jwt_secret: ""  # Set via environment variable
+  jwt_expiry: 86400  # 24 hours in seconds
+  api_key_rotation_days: 90
+  encryption_algorithm: "AES-256"
+  require_https: false  # Set to true in production
+
+# Feature Flags
+features:
+  paper_trading: true
+  live_trading: false
+  backtesting: true
+  portfolio_optimization: true
+  social_trading: false
+  copy_trading: false
+  automated_rebalancing: true
+  tax_loss_harvesting: false
+
+# Module Imports
+imports:
+  - "config/assets.yaml"
+  - "config/agents/*.yaml"
+  - "config/strategies/*.yaml"
+  - "config/risk/*.yaml"
+  - "config/environments/${ENVIRONMENT:-development}.yaml"

@@ -1,0 +1,53 @@
+# AI Analysis Agent Configuration
+# Specialized agent for market analysis and signal generation
+
+agent:
+  name: "analysis_agent"
+  type: "market_analyst"
+  version: "1.0.0"
+  description: "AI-powered market analysis agent focused on research and signals"
+  
+  core:
+    model: "gpt-4"
+    temperature: 0.5  # Higher temperature for creative analysis
+    max_tokens: 3000
+    context_window: 16000
+    reasoning_mode: "analytical"
+    
+  capabilities:
+    market_analysis: true
+    signal_generation: true
+    research: true
+    reporting: true
+    trade_execution: false  # Analysis only, no trading
+    
+  analysis_focus:
+    - technical_analysis
+    - fundamental_analysis
+    - sentiment_analysis
+    - pattern_recognition
+    - market_microstructure
+    
+  output:
+    format: "structured"  # structured, narrative, mixed
+    include_charts: true
+    include_reasoning: true
+    confidence_scores: true
+    
+  reporting:
+    frequency: "hourly"
+    distribution:
+      - trading_agent
+      - dashboard
+      - email
+    
+  integration:
+    feeds_to:
+      - trading_agent
+      - portfolio_manager
+    
+    data_sources:
+      - real_time_prices
+      - news_feeds
+      - social_sentiment
+      - economic_calendar

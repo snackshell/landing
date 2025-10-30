@@ -1,0 +1,103 @@
+# Aggressive Risk Management Configuration
+# Higher risk tolerance for experienced traders seeking greater returns
+
+risk_management:
+  name: "aggressive"
+  description: "Aggressive risk management profile with higher exposure limits"
+  
+  # Account Risk Limits
+  account:
+    max_risk_per_trade: 0.05  # 5% of account per trade
+    max_daily_loss: 0.10  # 10% maximum daily drawdown
+    max_weekly_loss: 0.20  # 20% maximum weekly drawdown
+    max_monthly_loss: 0.30  # 30% maximum monthly drawdown
+    max_total_exposure: 0.60  # 60% maximum combined exposure
+    
+  # Position Management
+  position:
+    max_position_size: 0.20  # 20% of account per position
+    max_positions_total: 15
+    max_positions_per_asset: 2
+    max_positions_per_asset_class: 8
+    max_correlation_exposure: 0.85
+    
+  # Leverage Controls
+  leverage:
+    default: 20
+    max: 50
+    forex: 50
+    commodities: 30
+    crypto: 20
+    indices: 30
+    use_dynamic_leverage: true
+    
+  # Stop Loss Configuration
+  stop_loss:
+    required: true
+    default_percent: 0.03  # 3% from entry
+    trailing_stop: true
+    trailing_step: 0.01  # 1% trailing step
+    max_stop_distance: 0.08
+    use_atr_stops: true
+    atr_multiplier: 2.5
+    
+  # Take Profit Configuration
+  take_profit:
+    required: false
+    default_reward_risk_ratio: 3.0  # 3:1 reward to risk
+    use_partial_exits: true
+    partial_exit_levels:
+      - percent: 0.30
+        ratio: 1.5
+      - percent: 0.30
+        ratio: 3.0
+      - percent: 0.40
+        ratio: 5.0
+    
+  # Volatility-Based Adjustments
+  volatility:
+    measure: "atr"
+    adjustment_enabled: false  # No adjustment in aggressive mode
+    high_volatility_threshold: 3.0
+    low_volatility_threshold: 0.3
+    position_size_multiplier_high: 0.8
+    position_size_multiplier_low: 1.5
+    
+  # Drawdown Protection
+  drawdown:
+    protection_enabled: true
+    thresholds:
+      - level: 0.20  # 20% drawdown
+        action: "reduce_size"
+        multiplier: 0.7
+      - level: 0.30  # 30% drawdown
+        action: "halt"
+        duration: 43200  # 12 hours
+    recovery_threshold: 0.10
+    
+  # Time-Based Risk Controls
+  time_controls:
+    trading_hours:
+      start: "00:00"
+      end: "23:59"
+    avoid_high_impact_news: false
+    news_blackout_minutes: 5
+    avoid_market_open_minutes: 0
+    avoid_market_close_minutes: 0
+    max_trades_per_day: 50
+    max_trades_per_hour: 10
+    
+  # Asset Class Limits
+  asset_class_limits:
+    forex:
+      max_exposure: 0.60
+      max_positions: 8
+    commodities:
+      max_exposure: 0.40
+      max_positions: 5
+    crypto:
+      max_exposure: 0.30
+      max_positions: 5
+    indices:
+      max_exposure: 0.40
+      max_positions: 5

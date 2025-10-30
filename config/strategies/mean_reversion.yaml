@@ -1,0 +1,105 @@
+# Mean Reversion Trading Strategy Configuration
+# Counter-trend strategy that profits from price returning to average
+
+strategy:
+  name: "mean_reversion"
+  type: "counter_trend"
+  description: "Mean reversion strategy using Bollinger Bands and RSI"
+  version: "1.0.0"
+  
+  parameters:
+    primary_timeframe: "4h"
+    confirmation_timeframes:
+      - "1d"
+      - "1h"
+    
+    indicators:
+      bollinger_bands:
+        period: 20
+        std_dev: 2.0
+        apply_to: "close"
+      
+      rsi:
+        period: 14
+        oversold: 30
+        overbought: 70
+        extreme_oversold: 20
+        extreme_overbought: 80
+      
+      stochastic:
+        period: 14  # K period as base
+        k_period: 14
+        d_period: 3
+        slowing: 3
+        oversold: 20
+        overbought: 80
+      
+      atr:
+        period: 14
+        multiplier: 1.5
+    
+    entry:
+      long:
+        conditions:
+          - "price < bb_lower"
+          - "rsi < 30"
+          - "stochastic_k < 20"
+          - "price_distance_from_ma > 2_std_dev"
+        confirmation_required: 3
+        
+      short:
+        conditions:
+          - "price > bb_upper"
+          - "rsi > 70"
+          - "stochastic_k > 80"
+          - "price_distance_from_ma > 2_std_dev"
+        confirmation_required: 3
+    
+    exit:
+      take_profit:
+        enabled: true
+        method: "mean_reversion"
+        target: "bb_middle"  # Exit at middle band
+        
+      stop_loss:
+        enabled: true
+        method: "atr_multiple"
+        atr_multiple: 2.0
+    
+    position_sizing:
+      method: "risk_based"
+      risk_per_trade: 0.015
+      min_position_size: 0.01
+      max_position_size: 0.08
+    
+    filters:
+      range_filter:
+        enabled: true
+        only_trade_ranging_markets: true
+        range_threshold: 0.5
+      
+      volatility_filter:
+        enabled: true
+        min_atr: 0.0008
+        max_atr: 0.0040
+  
+  asset_settings:
+    forex:
+      enabled: true
+      pairs:
+        - EURUSD
+        - GBPUSD
+    
+    commodities:
+      enabled: false
+    
+    crypto:
+      enabled: true
+      pairs:
+        - BTCUSD
+        - ETHUSD
+    
+    indices:
+      enabled: true
+      instruments:
+        - SPX500

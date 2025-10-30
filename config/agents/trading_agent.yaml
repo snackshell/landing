@@ -1,0 +1,272 @@
+# AI Trading Agent Configuration
+# Defines behavior and capabilities of AI trading agents
+
+agent:
+  name: "trading_agent"
+  type: "autonomous_trader"
+  version: "1.0.0"
+  description: "AI-powered autonomous trading agent with risk management"
+  
+  # Core Configuration
+  core:
+    model: "gpt-4"
+    temperature: 0.3  # Lower temperature for more consistent decisions
+    max_tokens: 2000
+    context_window: 8000
+    reasoning_mode: "chain_of_thought"
+    
+  # Agent Capabilities
+  capabilities:
+    market_analysis: true
+    signal_generation: true
+    risk_assessment: true
+    portfolio_management: true
+    trade_execution: true
+    learning: true
+    backtesting: true
+    
+  # Decision Making
+  decision_making:
+    mode: "hybrid"  # rule_based, ai_only, hybrid
+    confidence_threshold: 0.7  # Minimum confidence to execute trade
+    multi_factor_analysis: true
+    factors:
+      technical_analysis: 0.40
+      fundamental_analysis: 0.20
+      sentiment_analysis: 0.20
+      risk_metrics: 0.20
+    
+    voting_system:
+      enabled: true
+      min_votes: 3  # Minimum confirming signals
+      strategies:
+        - momentum
+        - mean_reversion
+        - breakout
+      
+  # Market Analysis
+  market_analysis:
+    timeframes:
+      - "1m"
+      - "5m"
+      - "15m"
+      - "1h"
+      - "4h"
+      - "1d"
+    
+    analysis_types:
+      technical:
+        enabled: true
+        indicators:
+          - moving_averages
+          - rsi
+          - macd
+          - bollinger_bands
+          - fibonacci
+          - support_resistance
+      
+      fundamental:
+        enabled: true
+        data_sources:
+          - economic_calendar
+          - earnings_reports
+          - central_bank_decisions
+        
+      sentiment:
+        enabled: true
+        sources:
+          - news
+          - social_media
+          - market_sentiment_index
+        sentiment_weight: 0.3
+      
+      volume_analysis:
+        enabled: true
+        profile_analysis: true
+        order_flow: true
+    
+  # Signal Generation
+  signal_generation:
+    frequency: "real_time"  # real_time, periodic, on_demand
+    update_interval: 60  # seconds for periodic mode
+    
+    signal_types:
+      - entry
+      - exit
+      - position_adjustment
+      - risk_alert
+    
+    quality_filters:
+      min_signal_strength: 0.6
+      require_confirmation: true
+      confluence_required: 2  # Multiple confirming factors
+    
+  # Risk Management
+  risk_management:
+    profile: "default"  # References risk/default.yaml
+    override_enabled: true
+    dynamic_adjustment: true
+    
+    position_monitoring:
+      frequency: 30  # seconds
+      auto_adjust: true
+      conditions:
+        - drawdown_threshold
+        - volatility_spike
+        - correlation_risk
+    
+    emergency_procedures:
+      enabled: true
+      triggers:
+        - system_error
+        - connection_loss
+        - extreme_volatility
+        - max_drawdown
+      actions:
+        - close_all_positions
+        - notify_admin
+        - log_event
+  
+  # Learning System
+  learning:
+    enabled: true
+    mode: "continuous"  # continuous, batch, manual
+    
+    feedback_loop:
+      track_predictions: true
+      analyze_outcomes: true
+      adjust_parameters: true
+      learning_rate: 0.01
+    
+    performance_metrics:
+      - win_rate
+      - profit_factor
+      - sharpe_ratio
+      - max_drawdown
+      - average_trade_duration
+    
+    model_updates:
+      frequency: "weekly"
+      validation_required: true
+      rollback_on_poor_performance: true
+  
+  # Execution
+  execution:
+    mode: "automated"  # automated, semi_automated, advisory
+    
+    order_types:
+      - market
+      - limit
+      - stop
+      - stop_limit
+      - trailing_stop
+    
+    execution_strategy:
+      slippage_tolerance: 0.001  # 0.1%
+      partial_fills_allowed: true
+      timeout: 5  # seconds
+      retry_attempts: 3
+      smart_routing: true
+    
+    pre_trade_checks:
+      - sufficient_balance
+      - risk_limits
+      - market_conditions
+      - spread_check
+      - liquidity_check
+  
+  # Portfolio Management
+  portfolio:
+    strategy: "diversified"  # concentrated, diversified, balanced
+    
+    allocation:
+      forex: 0.40
+      commodities: 0.20
+      crypto: 0.15
+      indices: 0.25
+    
+    rebalancing:
+      enabled: true
+      frequency: "daily"
+      threshold: 0.05  # Rebalance if deviation > 5%
+      method: "threshold"  # threshold, periodic, tactical
+    
+    optimization:
+      enabled: true
+      objective: "sharpe_ratio"  # sharpe_ratio, return, risk_adjusted
+      constraints:
+        - max_drawdown: 0.15
+        - min_diversification: 0.5
+  
+  # Monitoring and Reporting
+  monitoring:
+    real_time_dashboard: true
+    performance_tracking: true
+    
+    metrics:
+      - pnl
+      - win_rate
+      - sharpe_ratio
+      - max_drawdown
+      - trade_frequency
+      - average_hold_time
+    
+    alerts:
+      enabled: true
+      channels:
+        - email
+        - slack
+        - webhook
+      triggers:
+        - large_loss
+        - significant_profit
+        - risk_breach
+        - system_error
+  
+  # Communication
+  communication:
+    natural_language: true
+    explain_decisions: true
+    confidence_reporting: true
+    
+    reporting:
+      daily_summary: true
+      weekly_report: true
+      monthly_analysis: true
+      
+    interaction_modes:
+      - chat
+      - voice
+      - api
+  
+  # Safety and Compliance
+  safety:
+    kill_switch: true
+    max_loss_limit: 0.20  # 20% account loss triggers shutdown
+    human_oversight: false  # Fully autonomous
+    audit_logging: true
+    
+  compliance:
+    regulatory_checks: true
+    trade_reporting: true
+    record_retention: 2555  # 7 years in days
+    
+  # Integration
+  integration:
+    trading_platforms:
+      - mt5
+      - interactive_brokers
+    
+    data_providers:
+      - polygon
+      - alpha_vantage
+    
+    notification_services:
+      - email
+      - slack
+      - telegram
+    
+    external_apis:
+      enabled: true
+      webhook_url: ""
+      api_keys_required: true

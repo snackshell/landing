@@ -1,0 +1,69 @@
+# Production Environment Configuration
+# Live production settings with enhanced security and monitoring
+
+system:
+  environment: "production"
+  debug: false
+  log_level: "WARNING"
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins:
+    - "https://selamai.com"
+    - "https://app.selamai.com"
+    - "https://api.selamai.com"
+  rate_limit:
+    enabled: true
+    requests_per_minute: 120
+    requests_per_hour: 5000
+
+database:
+  host: "prod-db.selamai.internal"
+  port: 5432
+  name: "selamai_production"
+  pool_size: 50
+  echo: false
+
+cache:
+  host: "prod-redis.selamai.internal"
+  port: 6379
+  ttl: 1800  # 30 minutes
+  max_size: 10000
+
+broker:
+  default_provider: "mt5"
+  mt5:
+    enabled: true
+    server: "live.server.com"  # Live server in production
+
+security:
+  require_https: true
+  jwt_expiry: 43200  # 12 hours
+  api_key_rotation_days: 30  # More frequent rotation in production
+
+features:
+  paper_trading: true
+  live_trading: true  # Enabled in production
+  backtesting: true
+
+monitoring:
+  enabled: true
+  metrics_interval: 30  # More frequent monitoring
+  alert_channels:
+    - email
+    - slack
+  health_check_interval: 15
+  performance_tracking: true
+
+data_feed:
+  primary_provider: "polygon"
+  update_interval: 60
+  historical_data_days: 730  # 2 years
+  providers:
+    polygon:
+      enabled: true
+      websocket: true
+    alpha_vantage:
+      enabled: true
+      rate_limit: 5
