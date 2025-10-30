@@ -1,0 +1,202 @@
+# Momentum Trading Strategy Configuration
+# Trend-following strategy that capitalizes on price momentum
+
+strategy:
+  name: "momentum"
+  type: "trend_following"
+  description: "Momentum strategy using multiple timeframe analysis and indicators"
+  version: "1.0.0"
+  
+  # Strategy Parameters
+  parameters:
+    # Timeframes
+    primary_timeframe: "1h"  # Main trading timeframe
+    confirmation_timeframes:
+      - "4h"  # Higher timeframe for trend confirmation
+      - "15m"  # Lower timeframe for entry timing
+    
+    # Technical Indicators
+    indicators:
+      # Moving Averages
+      ema_fast:
+        period: 20
+        type: "exponential"
+        apply_to: "close"
+      ema_slow:
+        period: 50
+        type: "exponential"
+        apply_to: "close"
+      ema_trend:
+        period: 200
+        type: "exponential"
+        apply_to: "close"
+      
+      # Momentum Indicators
+      rsi:
+        period: 14
+        overbought: 70
+        oversold: 30
+        apply_to: "close"
+      
+      macd:
+        period: 26  # Slow period as base
+        fast_period: 12
+        slow_period: 26
+        signal_period: 9
+        apply_to: "close"
+      
+      atr:
+        period: 14
+        multiplier: 2.0
+      
+      # Volume
+      volume_ma:
+        period: 20
+        type: "simple"
+    
+    # Entry Conditions
+    entry:
+      long:
+        conditions:
+          - "ema_fast > ema_slow"
+          - "price > ema_trend"
+          - "macd > macd_signal"
+          - "rsi > 50"
+          - "volume > volume_ma * 1.2"
+        confirmation_required: 3  # At least 3 conditions must be true
+        
+      short:
+        conditions:
+          - "ema_fast < ema_slow"
+          - "price < ema_trend"
+          - "macd < macd_signal"
+          - "rsi < 50"
+          - "volume > volume_ma * 1.2"
+        confirmation_required: 3
+    
+    # Exit Conditions
+    exit:
+      take_profit:
+        enabled: true
+        method: "atr_multiple"  # fixed, atr_multiple, trailing
+        atr_multiple: 3.0
+        
+      stop_loss:
+        enabled: true
+        method: "atr_multiple"
+        atr_multiple: 2.0
+        
+      trailing_stop:
+        enabled: true
+        activation_profit: 1.5  # Activate after 1.5x ATR profit
+        trail_distance: 1.0  # Trail by 1x ATR
+        
+      exit_signals:
+        - "ema_fast crosses ema_slow opposite"
+        - "rsi reaches opposite extreme"
+        - "macd crosses opposite"
+    
+    # Position Sizing
+    position_sizing:
+      method: "risk_based"  # fixed, risk_based, kelly, volatility_adjusted
+      risk_per_trade: 0.02  # 2% of account
+      min_position_size: 0.01
+      max_position_size: 0.10
+      scale_in_enabled: true
+      scale_in_levels: 2
+      scale_out_enabled: true
+      scale_out_levels: 3
+    
+    # Filters
+    filters:
+      trend_filter:
+        enabled: true
+        only_trade_with_trend: true
+        trend_strength_min: 0.6
+      
+      volatility_filter:
+        enabled: true
+        min_atr: 0.0010  # Minimum volatility required
+        max_atr: 0.0050  # Maximum volatility allowed
+      
+      time_filter:
+        enabled: true
+        trading_sessions:
+          - name: "london"
+            start: "08:00"
+            end: "16:00"
+            weight: 1.0
+          - name: "new_york"
+            start: "13:00"
+            end: "21:00"
+            weight: 1.0
+        avoid_weekends: true
+        avoid_holidays: true
+      
+      spread_filter:
+        enabled: true
+        max_spread: 0.0002  # Maximum spread allowed for entry
+      
+      news_filter:
+        enabled: true
+        avoid_high_impact: true
+        blackout_minutes: 30
+  
+  # Asset-Specific Settings
+  asset_settings:
+    forex:
+      enabled: true
+      pairs:
+        - EURUSD
+        - GBPUSD
+        - USDJPY
+      min_pip_move: 10
+      
+    commodities:
+      enabled: true
+      instruments:
+        - XAUUSD
+      
+    crypto:
+      enabled: false  # Momentum may be too volatile for crypto
+      
+    indices:
+      enabled: true
+      instruments:
+        - SPX500
+        - NAS100
+  
+  # Backtesting Parameters
+  backtest:
+    start_date: "2022-01-01"
+    end_date: "2023-12-31"
+    initial_capital: 10000
+    commission: 0.0001  # 1 pip per trade
+    slippage: 0.5  # 0.5 pip
+    
+  # Performance Targets
+  performance:
+    min_win_rate: 0.45  # 45% minimum win rate
+    min_profit_factor: 1.5
+    max_drawdown: 0.15  # 15%
+    min_sharpe_ratio: 1.0
+    min_trades_per_month: 10
+    
+  # Optimization
+  optimization:
+    enabled: true
+    method: "walk_forward"  # walk_forward, genetic, grid_search
+    parameters_to_optimize:
+      - ema_fast_period
+      - ema_slow_period
+      - rsi_period
+      - atr_multiplier
+    optimization_metric: "sharpe_ratio"
+    
+  # Monitoring
+  monitoring:
+    real_time_alerts: true
+    performance_tracking: true
+    daily_summary: true
+    signal_logging: true
+    trade_journal: true

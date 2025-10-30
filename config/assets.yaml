@@ -1,0 +1,229 @@
+# Trading Assets Configuration
+# Defines supported trading instruments across multiple asset classes
+
+assets:
+  # Forex Major Pairs
+  forex:
+    enabled: true
+    pairs:
+      EURUSD:
+        name: "Euro/US Dollar"
+        pip_value: 0.0001
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.02  # 2%
+        trading_hours: "24/5"
+        spread_typical: 0.00001
+        commission: 0
+        enabled: true
+      GBPUSD:
+        name: "British Pound/US Dollar"
+        pip_value: 0.0001
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.02
+        trading_hours: "24/5"
+        spread_typical: 0.00015
+        commission: 0
+        enabled: true
+      USDJPY:
+        name: "US Dollar/Japanese Yen"
+        pip_value: 0.01
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.02
+        trading_hours: "24/5"
+        spread_typical: 0.001
+        commission: 0
+        enabled: true
+      USDCHF:
+        name: "US Dollar/Swiss Franc"
+        pip_value: 0.0001
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.02
+        trading_hours: "24/5"
+        spread_typical: 0.00015
+        commission: 0
+        enabled: true
+      AUDUSD:
+        name: "Australian Dollar/US Dollar"
+        pip_value: 0.0001
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.02
+        trading_hours: "24/5"
+        spread_typical: 0.00012
+        commission: 0
+        enabled: true
+      USDCAD:
+        name: "US Dollar/Canadian Dollar"
+        pip_value: 0.0001
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.02
+        trading_hours: "24/5"
+        spread_typical: 0.00015
+        commission: 0
+        enabled: true
+      NZDUSD:
+        name: "New Zealand Dollar/US Dollar"
+        pip_value: 0.0001
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.02
+        trading_hours: "24/5"
+        spread_typical: 0.00018
+        commission: 0
+        enabled: true
+
+  # Commodities
+  commodities:
+    enabled: true
+    instruments:
+      XAUUSD:
+        name: "Gold/US Dollar"
+        symbol: "XAUUSD"
+        type: "metal"
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.01  # 1%
+        trading_hours: "23/5"
+        spread_typical: 0.30
+        tick_size: 0.01
+        contract_size: 100
+        enabled: true
+      XAGUSD:
+        name: "Silver/US Dollar"
+        symbol: "XAGUSD"
+        type: "metal"
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.015
+        trading_hours: "23/5"
+        spread_typical: 0.02
+        tick_size: 0.001
+        contract_size: 5000
+        enabled: true
+      WTIUSD:
+        name: "WTI Crude Oil"
+        symbol: "WTIUSD"
+        type: "energy"
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.02
+        trading_hours: "23/5"
+        spread_typical: 0.03
+        tick_size: 0.01
+        contract_size: 1000
+        enabled: true
+
+  # Cryptocurrencies
+  crypto:
+    enabled: true
+    pairs:
+      BTCUSD:
+        name: "Bitcoin/US Dollar"
+        min_lot_size: 0.001
+        max_lot_size: 10
+        margin_requirement: 0.50  # 50% for crypto
+        trading_hours: "24/7"
+        spread_typical: 10.0
+        maker_fee: 0.001  # 0.1%
+        taker_fee: 0.002  # 0.2%
+        enabled: true
+      ETHUSD:
+        name: "Ethereum/US Dollar"
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.50
+        trading_hours: "24/7"
+        spread_typical: 1.0
+        maker_fee: 0.001
+        taker_fee: 0.002
+        enabled: true
+      BNBUSD:
+        name: "Binance Coin/US Dollar"
+        min_lot_size: 0.01
+        max_lot_size: 100
+        margin_requirement: 0.50
+        trading_hours: "24/7"
+        spread_typical: 0.10
+        maker_fee: 0.001
+        taker_fee: 0.002
+        enabled: true
+      SOLUSD:
+        name: "Solana/US Dollar"
+        min_lot_size: 0.1
+        max_lot_size: 1000
+        margin_requirement: 0.50
+        trading_hours: "24/7"
+        spread_typical: 0.05
+        maker_fee: 0.001
+        taker_fee: 0.002
+        enabled: true
+
+  # Indices (CFDs)
+  indices:
+    enabled: true
+    instruments:
+      US30:
+        name: "Dow Jones Industrial Average"
+        min_lot_size: 0.01
+        max_lot_size: 50
+        margin_requirement: 0.005  # 0.5%
+        trading_hours: "23/5"
+        spread_typical: 2.0
+        enabled: true
+      SPX500:
+        name: "S&P 500"
+        min_lot_size: 0.01
+        max_lot_size: 50
+        margin_requirement: 0.005
+        trading_hours: "23/5"
+        spread_typical: 0.5
+        enabled: true
+      NAS100:
+        name: "NASDAQ 100"
+        min_lot_size: 0.01
+        max_lot_size: 50
+        margin_requirement: 0.005
+        trading_hours: "23/5"
+        spread_typical: 1.0
+        enabled: true
+
+# Global Asset Settings
+global_settings:
+  default_slippage: 0.0001  # 1 pip for forex
+  max_slippage_percent: 0.5  # 0.5% maximum slippage allowed
+  order_execution_timeout: 5  # seconds
+  price_update_frequency: 1  # seconds
+  historical_data_retention: 730  # days (2 years)
+  
+# Asset Watchlists
+watchlists:
+  default:
+    - EURUSD
+    - GBPUSD
+    - XAUUSD
+    - BTCUSD
+  
+  forex_majors:
+    - EURUSD
+    - GBPUSD
+    - USDJPY
+    - USDCHF
+    - AUDUSD
+    - USDCAD
+    - NZDUSD
+  
+  crypto_top:
+    - BTCUSD
+    - ETHUSD
+    - BNBUSD
+    - SOLUSD
+  
+  commodities:
+    - XAUUSD
+    - XAGUSD
+    - WTIUSD

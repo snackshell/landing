@@ -1,0 +1,50 @@
+# Development Environment Configuration
+# Overrides for local development
+
+system:
+  environment: "development"
+  debug: true
+  log_level: "DEBUG"
+
+api:
+  host: "localhost"
+  port: 8000
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:8000"
+    - "http://127.0.0.1:3000"
+
+database:
+  host: "localhost"
+  port: 5432
+  name: "selamai_dev"
+  echo: true  # Log SQL queries in development
+
+cache:
+  host: "localhost"
+  port: 6379
+
+broker:
+  default_provider: "mt5"
+  mt5:
+    enabled: true
+    server: "demo.server.com"
+    # Credentials from environment variables
+
+security:
+  require_https: false
+  jwt_expiry: 604800  # 7 days for easier development
+
+features:
+  paper_trading: true
+  live_trading: false  # Disabled in development
+  backtesting: true
+  
+monitoring:
+  enabled: true
+  alert_channels:
+    - email
+
+data_feed:
+  primary_provider: "yahoo"  # Free provider for development
+  update_interval: 300  # 5 minutes - less frequent for dev

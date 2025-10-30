@@ -1,0 +1,146 @@
+# Default Risk Management Configuration
+# Controls risk exposure, position sizing, and protective measures
+
+risk_management:
+  name: "default"
+  description: "Conservative risk management profile"
+  
+  # Account Risk Limits
+  account:
+    max_risk_per_trade: 0.02  # 2% of account per trade
+    max_daily_loss: 0.05  # 5% maximum daily drawdown
+    max_weekly_loss: 0.10  # 10% maximum weekly drawdown
+    max_monthly_loss: 0.20  # 20% maximum monthly drawdown
+    max_total_exposure: 0.30  # 30% maximum combined exposure
+    
+  # Position Management
+  position:
+    max_position_size: 0.10  # 10% of account per position
+    max_positions_total: 10  # Maximum number of open positions
+    max_positions_per_asset: 1  # Maximum positions per asset
+    max_positions_per_asset_class: 5  # Maximum positions per asset class
+    max_correlation_exposure: 0.70  # Don't over-expose to correlated assets
+    
+  # Leverage Controls
+  leverage:
+    default: 10
+    max: 30
+    forex: 30
+    commodities: 20
+    crypto: 10
+    indices: 20
+    use_dynamic_leverage: true  # Reduce leverage during high volatility
+    
+  # Stop Loss Configuration
+  stop_loss:
+    required: true  # All positions must have stop loss
+    default_percent: 0.02  # 2% from entry
+    trailing_stop: false
+    trailing_step: 0.005  # 0.5% trailing step
+    max_stop_distance: 0.05  # 5% maximum stop distance
+    use_atr_stops: true  # Use Average True Range for dynamic stops
+    atr_multiplier: 2.0
+    
+  # Take Profit Configuration
+  take_profit:
+    required: false
+    default_reward_risk_ratio: 2.0  # 2:1 reward to risk
+    use_partial_exits: true
+    partial_exit_levels:
+      - percent: 0.50  # Exit 50% at 1:1
+        ratio: 1.0
+      - percent: 0.30  # Exit 30% at 2:1
+        ratio: 2.0
+      - percent: 0.20  # Exit 20% at 3:1
+        ratio: 3.0
+    
+  # Volatility-Based Adjustments
+  volatility:
+    measure: "atr"  # atr, standard_deviation, historical_volatility
+    adjustment_enabled: true
+    high_volatility_threshold: 2.0  # Reduce position size when volatility exceeds this
+    low_volatility_threshold: 0.5
+    position_size_multiplier_high: 0.5  # Reduce size by 50% in high volatility
+    position_size_multiplier_low: 1.2  # Increase size by 20% in low volatility
+    
+  # Correlation Risk
+  correlation:
+    check_enabled: true
+    max_correlation_threshold: 0.7
+    correlation_lookback_period: 30  # days
+    diversification_required: true
+    min_asset_classes: 2
+    
+  # Drawdown Protection
+  drawdown:
+    protection_enabled: true
+    thresholds:
+      - level: 0.10  # 10% drawdown
+        action: "reduce_size"  # Reduce position sizes by 50%
+        multiplier: 0.5
+      - level: 0.15  # 15% drawdown
+        action: "reduce_size"  # Reduce position sizes by 75%
+        multiplier: 0.25
+      - level: 0.20  # 20% drawdown
+        action: "halt"  # Stop trading
+        duration: 86400  # 24 hours
+    recovery_threshold: 0.05  # Resume when drawdown recovers to 5%
+    
+  # Time-Based Risk Controls
+  time_controls:
+    trading_hours:
+      start: "00:00"
+      end: "23:59"
+    avoid_high_impact_news: true
+    news_blackout_minutes: 15  # Minutes before and after major news
+    avoid_market_open_minutes: 5
+    avoid_market_close_minutes: 5
+    max_trades_per_day: 20
+    max_trades_per_hour: 5
+    
+  # Exposure Limits by Asset Class
+  asset_class_limits:
+    forex:
+      max_exposure: 0.40  # 40% of account
+      max_positions: 5
+    commodities:
+      max_exposure: 0.20
+      max_positions: 3
+    crypto:
+      max_exposure: 0.15  # More conservative for crypto
+      max_positions: 3
+    indices:
+      max_exposure: 0.25
+      max_positions: 3
+      
+  # Emergency Controls
+  emergency:
+    kill_switch_enabled: true
+    auto_close_on_connection_loss: false
+    max_slippage_close_all: 0.05  # Close all if slippage exceeds 5%
+    server_disconnect_action: "nothing"  # nothing, close_all, pause
+    
+  # Kelly Criterion (Optional Position Sizing)
+  kelly_criterion:
+    enabled: false
+    fraction: 0.25  # Use quarter Kelly for safety
+    min_win_rate: 0.35  # Minimum 35% win rate required
+    min_trades_sample: 30  # Need 30+ trades for calculation
+    
+  # Monte Carlo Risk Assessment
+  monte_carlo:
+    enabled: true
+    simulations: 10000
+    confidence_level: 0.95  # 95% confidence interval
+    var_calculation: true  # Value at Risk
+    expected_shortfall: true  # CVaR
+    
+  # Alerts and Notifications
+  alerts:
+    risk_breach_notification: true
+    daily_summary: true
+    weekly_report: true
+    channels:
+      - email
+      - slack
+    critical_threshold: 0.15  # Immediate alert at 15% drawdown

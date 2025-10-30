@@ -1,0 +1,49 @@
+# Staging Environment Configuration
+# Pre-production testing environment
+
+system:
+  environment: "staging"
+  debug: false
+  log_level: "INFO"
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins:
+    - "https://staging.selamai.com"
+    - "https://staging-api.selamai.com"
+
+database:
+  host: "staging-db.selamai.internal"
+  port: 5432
+  name: "selamai_staging"
+  echo: false
+
+cache:
+  host: "staging-redis.selamai.internal"
+  port: 6379
+
+broker:
+  default_provider: "mt5"
+  mt5:
+    enabled: true
+    server: "demo.server.com"  # Still using demo in staging
+
+security:
+  require_https: true
+  jwt_expiry: 86400  # 24 hours
+
+features:
+  paper_trading: true
+  live_trading: false  # Still disabled in staging
+  backtesting: true
+
+monitoring:
+  enabled: true
+  alert_channels:
+    - email
+    - slack
+
+data_feed:
+  primary_provider: "polygon"  # Production-like data provider
+  update_interval: 60
